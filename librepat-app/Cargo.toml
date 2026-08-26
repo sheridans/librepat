@@ -1,0 +1,26 @@
+[package]
+name = "librepat-app"
+description = "LibrePAT native desktop application"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "librepat"
+path = "src/main.rs"
+
+[dependencies]
+eframe.workspace = true
+librepat-core = { version = "0.1.0", path = "../librepat-core" }
+librepat-fluke = { version = "0.1.0", path = "../librepat-fluke" }
+librepat-kewtech = { version = "0.1.0", path = "../librepat-kewtech" }
+librepat-report = { version = "0.1.0", path = "../librepat-report" }
+librepat-seaward = { version = "0.1.0", path = "../librepat-seaward" }
+librepat-storage = { version = "0.1.0", path = "../librepat-storage" }
+rfd.workspace = true
+time.workspace = true
+
+[lints]
+workspace = true

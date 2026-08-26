@@ -1,0 +1,14 @@
+TEST NUMBER  1
+DATE  24/08/2026
+APP NO  A-001
+DESCRIPTION  Anonymous appliance
+LOCN  Test room
+VISUAL CHECK  P
+EARTH  0.09 OHM P
+INS  >199.9 MOHM P
+LOAD  250 VA P
+LKGE  0.10 mA P
+LEAD CONTINUITY  P
+SITE  Example Site
+TEXT  Synthetic fixture only
+END OF DATA

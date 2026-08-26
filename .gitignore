@@ -1,0 +1,11 @@
+/target/
+/output/
+/*.FLK
+/*.flk
+/*.PAT
+/*.pat
+/*.pdf
+/*.librepat
+*.librepat-journal
+*.librepat-wal
+*.librepat-shm

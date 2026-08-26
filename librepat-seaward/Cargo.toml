@@ -1,0 +1,16 @@
+[package]
+name = "librepat-seaward"
+description = "Seaward PrimeTest ASCII importer for LibrePAT"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+librepat-core = { version = "0.1.0", path = "../librepat-core" }
+librepat-import = { version = "0.1.0", path = "../librepat-import" }
+time.workspace = true
+
+[lints]
+workspace = true

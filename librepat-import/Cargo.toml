@@ -1,0 +1,16 @@
+[package]
+name = "librepat-import"
+description = "Shared labelled-text import pipeline for LibrePAT"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+librepat-core = { version = "0.1.0", path = "../librepat-core" }
+sha2.workspace = true
+time.workspace = true
+
+[lints]
+workspace = true

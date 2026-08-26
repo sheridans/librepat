@@ -1,0 +1,20 @@
+[package]
+name = "librepat-report"
+description = "Original PDF reports and certificates for LibrePAT"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+librepat-core = { version = "0.1.0", path = "../librepat-core" }
+printpdf.workspace = true
+thiserror.workspace = true
+time.workspace = true
+
+[dev-dependencies]
+lopdf = "0.44.0"
+
+[lints]
+workspace = true

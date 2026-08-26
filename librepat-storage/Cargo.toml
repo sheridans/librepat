@@ -1,0 +1,21 @@
+[package]
+name = "librepat-storage"
+description = "Portable SQLite job storage for LibrePAT"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+librepat-core = { version = "0.1.0", path = "../librepat-core" }
+rusqlite.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+time.workspace = true
+
+[dev-dependencies]
+librepat-fluke = { version = "0.1.0", path = "../librepat-fluke" }
+
+[lints]
+workspace = true

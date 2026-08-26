@@ -1,0 +1,172 @@
+MODEL   6500
+SN      SYNTHETIC-0001
+
+TEST NUMBER      1
+DATE     01-JAN-80
+APP NO  A-001
+TEST MODE   0  MAN
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+LEAD CONTINUITY  P
+EARTH   0.04 OHM P
+LIMIT     0.10 OHM
+INS 1 >299.9 MEG P
+LIMIT      1.0 MEG
+DES1  Bench
+DES2  supply
+DES3
+LOC1  Workshop
+LOC2  East
+
+TEST NUMBER      2
+DATE     02-FEB-79
+APP NO  A-002
+TEST MODE 133 AUTO
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+VISUAL CHECK     F
+DES1  Kettle
+DES2
+DES3
+LOC1  Kitchen
+LOC2
+
+TEST NUMBER      3
+DATE     03-MAR-24
+APP NO  A-003
+TEST MODE 136 AUTO
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+VISUAL CHECK     P
+EARTH   0.05 OHM P
+LIMIT     0.10 OHM
+DES1  Monitor
+DES2
+DES3
+LOC1  Office
+LOC2
+
+TEST NUMBER      4
+DATE     04-APR-24
+APP NO  A-004
+TEST MODE 231 AUTO
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+TOUCH    0.00 mA P
+LIMIT      0.25 mA
+LOAD        0 VA S
+DES1  Adapter
+DES2
+DES3
+LOC1  Office
+LOC2
+
+TEST NUMBER      5
+DATE     05-MAY-24
+APP NO  A-005
+TEST MODE 232 AUTO
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+LKGE     0.10 mA P
+LIMIT      0.75 mA
+DES1  Lamp
+DES2
+DES3
+LOC1  Hall
+LOC2
+
+TEST NUMBER      6
+DATE     06-JUN-24
+APP NO  A-006
+TEST MODE 233 AUTO
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+SUBST 1  0.15 mA P
+LIMIT      0.50 mA
+DES1  Fan
+DES2
+DES3
+LOC1  Hall
+LOC2
+
+TEST NUMBER      7
+DATE     07-JUL-24
+APP NO  A-007
+TEST MODE 333 AUTO
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+VISUAL CHECK     P
+INS 2 >299.9 MEG P
+LIMIT      2.0 MEG
+DES1  Charger
+DES2
+DES3
+LOC1  Store
+LOC2
+
+TEST NUMBER      8
+DATE     08-AUG-24
+APP NO  A-008
+TEST MODE 334 AUTO
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+CURRENT    0.2 A P
+LIMIT       13.0 A
+DES1  Drill
+DES2
+DES3
+LOC1  Store
+LOC2
+
+TEST NUMBER      9
+DATE     09-SEP-24
+APP NO  A-009
+TEST MODE 336 AUTO
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+VISUAL CHECK     P
+INS 2 >299.9 MEG P
+LIMIT      2.0 MEG
+DES1  Display
+DES2
+DES3
+LOC1  Lobby
+LOC2
+
+TEST NUMBER      10
+DATE     10-OCT-24
+APP NO  A-010
+TEST MODE   0  MAN
+SITE  Example
+SITE1 Test Centre
+SITE2 North
+USER    Operator
+PROBE PELV    47 V P
+LIMIT          50 V
+ARC TEST     1.20 ZZ S
+DES1  Control
+DES2  panel
+DES3
+LOC1  Plant
+LOC2  Room
+
+END OF DATA
+
