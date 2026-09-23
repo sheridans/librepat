@@ -2,13 +2,14 @@
 name = "librepat-report"
 description = "Original PDF reports and certificates for LibrePAT"
 version.workspace = true
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 
 [dependencies]
-librepat-core = { version = "0.1.0", path = "../librepat-core" }
+librepat-core = { path = "../librepat-core" }
 printpdf.workspace = true
 thiserror.workspace = true
 time.workspace = true

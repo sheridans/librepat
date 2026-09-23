@@ -2,6 +2,7 @@
 name = "librepat-app"
 description = "LibrePAT native desktop application"
 version.workspace = true
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
@@ -13,12 +14,12 @@ path = "src/main.rs"
 
 [dependencies]
 eframe.workspace = true
-librepat-core = { version = "0.1.0", path = "../librepat-core" }
-librepat-fluke = { version = "0.1.0", path = "../librepat-fluke" }
-librepat-kewtech = { version = "0.1.0", path = "../librepat-kewtech" }
-librepat-report = { version = "0.1.0", path = "../librepat-report" }
-librepat-seaward = { version = "0.1.0", path = "../librepat-seaward" }
-librepat-storage = { version = "0.1.0", path = "../librepat-storage" }
+librepat-core = { path = "../librepat-core" }
+librepat-fluke = { path = "../librepat-fluke" }
+librepat-kewtech = { path = "../librepat-kewtech" }
+librepat-report = { path = "../librepat-report" }
+librepat-seaward = { path = "../librepat-seaward" }
+librepat-storage = { path = "../librepat-storage" }
 rfd.workspace = true
 time.workspace = true
 

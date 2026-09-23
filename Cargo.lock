@@ -1601,7 +1601,7 @@ dependencies = [
 
 [[package]]
 name = "librepat-app"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "eframe",
  "librepat-core",
@@ -1616,7 +1616,7 @@ dependencies = [
 
 [[package]]
 name = "librepat-core"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "serde",
  "thiserror 2.0.20",
@@ -1625,7 +1625,7 @@ dependencies = [
 
 [[package]]
 name = "librepat-fluke"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "librepat-core",
  "librepat-import",
@@ -1634,7 +1634,7 @@ dependencies = [
 
 [[package]]
 name = "librepat-import"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "librepat-core",
  "sha2",
@@ -1643,7 +1643,7 @@ dependencies = [
 
 [[package]]
 name = "librepat-kewtech"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "librepat-core",
  "librepat-fluke",
@@ -1654,7 +1654,7 @@ dependencies = [
 
 [[package]]
 name = "librepat-report"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "librepat-core",
  "lopdf",
@@ -1665,7 +1665,7 @@ dependencies = [
 
 [[package]]
 name = "librepat-seaward"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "librepat-core",
  "librepat-import",
@@ -1674,7 +1674,7 @@ dependencies = [
 
 [[package]]
 name = "librepat-storage"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "librepat-core",
  "librepat-fluke",

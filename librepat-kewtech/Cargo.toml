@@ -2,19 +2,20 @@
 name = "librepat-kewtech"
 description = "Kewtech KT74/77 ASCII importer for LibrePAT"
 version.workspace = true
+publish.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 
 [dependencies]
-librepat-core = { version = "0.1.0", path = "../librepat-core" }
-librepat-import = { version = "0.1.0", path = "../librepat-import" }
+librepat-core = { path = "../librepat-core" }
+librepat-import = { path = "../librepat-import" }
 time.workspace = true
 
 [dev-dependencies]
-librepat-fluke = { version = "0.1.0", path = "../librepat-fluke" }
-librepat-seaward = { version = "0.1.0", path = "../librepat-seaward" }
+librepat-fluke = { path = "../librepat-fluke" }
+librepat-seaward = { path = "../librepat-seaward" }
 
 [lints]
 workspace = true
