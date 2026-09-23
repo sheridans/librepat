@@ -1,6 +1,9 @@
-use rusqlite::Connection;
+use rusqlite::{Connection, TransactionBehavior};
 
-use crate::StoreError;
+use crate::{
+    StoreError,
+    store::{APPLICATION_ID, SCHEMA_VERSION},
+};
 
 pub(crate) fn create_tables(connection: &Connection) -> Result<(), StoreError> {
     connection.execute_batch(
@@ -41,7 +44,8 @@ pub(crate) fn create_tables(connection: &Connection) -> Result<(), StoreError> {
             mode_code TEXT NOT NULL,
             mode_label TEXT NOT NULL,
             user_name TEXT NOT NULL,
-            overall_status TEXT NOT NULL
+            overall_status TEXT NOT NULL,
+            removed INTEGER NOT NULL DEFAULT 0 CHECK (removed IN (0, 1))
         );
         CREATE TABLE test_result (
             id INTEGER PRIMARY KEY,
@@ -83,6 +87,40 @@ pub(crate) fn create_tables(connection: &Connection) -> Result<(), StoreError> {
         );
         ",
     )?;
+    Ok(())
+}
+
+pub(crate) fn validate_identity(connection: &Connection) -> Result<i64, StoreError> {
+    let application_id: i64 =
+        connection.query_row("PRAGMA application_id", [], |row| row.get(0))?;
+    if application_id != APPLICATION_ID {
+        return Err(StoreError::InvalidApplicationId);
+    }
+    let version: i64 = connection.query_row("PRAGMA user_version", [], |row| row.get(0))?;
+    if version > SCHEMA_VERSION {
+        return Err(StoreError::UnsupportedSchema(version));
+    }
+    if !(1..=SCHEMA_VERSION).contains(&version) {
+        return Err(StoreError::InvalidSchema(version));
+    }
+    Ok(version)
+}
+
+pub(crate) fn migrate(connection: &mut Connection, version: i64) -> Result<(), StoreError> {
+    if version == SCHEMA_VERSION {
+        return Ok(());
+    }
+    let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+    if version == 1 {
+        transaction.execute_batch(
+            "ALTER TABLE appliance ADD COLUMN removed INTEGER NOT NULL DEFAULT 0
+             CHECK (removed IN (0, 1));",
+        )?;
+    } else {
+        return Err(StoreError::InvalidSchema(version));
+    }
+    transaction.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+    transaction.commit()?;
     Ok(())
 }
 

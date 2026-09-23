@@ -50,6 +50,7 @@ pub fn sample_job() -> Job {
         original_metadata: metadata,
         appliances: vec![Appliance {
             source_record_number: "1".into(),
+            removed: false,
             appliance_id: "A-001".into(),
             description: "Synthetic appliance".into(),
             description_segments: vec!["Synthetic".into(), "appliance".into(), String::new()],

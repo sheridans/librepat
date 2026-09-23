@@ -68,7 +68,13 @@ fn report_page(job: &Job, fonts: &ReportFonts) -> PageCanvas {
         7.5,
         false,
         WHITE,
-        format!("{} appliances", job.appliances.len()),
+        format!(
+            "{} appliances",
+            job.appliances
+                .iter()
+                .filter(|appliance| !appliance.removed)
+                .count()
+        ),
     );
     page.text(
         12.0,

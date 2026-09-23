@@ -59,7 +59,7 @@ fn load_appliances(connection: &Connection) -> Result<Vec<Appliance>, StoreError
     let mut statement = connection.prepare(
         "SELECT id, source_record_number, appliance_id, description, location,
                 test_date, test_time, retest_date, comments, mode_code, mode_label,
-                user_name, overall_status
+                user_name, overall_status, removed
          FROM appliance ORDER BY ordinal",
     )?;
     let rows = statement
@@ -78,6 +78,7 @@ fn load_appliances(connection: &Connection) -> Result<Vec<Appliance>, StoreError
                 mode_label: row.get(10)?,
                 user: row.get(11)?,
                 status: row.get(12)?,
+                removed: row.get(13)?,
             })
         })?
         .collect::<Result<Vec<_>, _>>()?;
@@ -101,6 +102,7 @@ struct ApplianceRow {
     mode_label: String,
     user: String,
     status: String,
+    removed: bool,
 }
 
 impl ApplianceRow {
@@ -112,6 +114,7 @@ impl ApplianceRow {
         })?;
         Ok(Appliance {
             source_record_number: self.source_record_number,
+            removed: self.removed,
             appliance_id: self.appliance_id,
             description: self.description,
             description_segments: load_segments(connection, self.id, "description")?,

@@ -99,6 +99,7 @@ mod tests {
     fn appliance(retest_date: Option<Date>) -> Appliance {
         Appliance {
             source_record_number: "1".into(),
+            removed: false,
             appliance_id: "A-1".into(),
             description: String::new(),
             description_segments: Vec::new(),

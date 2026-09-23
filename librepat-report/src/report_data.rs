@@ -5,7 +5,11 @@ use librepat_core::{
 use crate::canvas::{MUTED, TEAL};
 
 pub(crate) fn sorted_appliances(job: &Job) -> Vec<&Appliance> {
-    let mut appliances = job.appliances.iter().collect::<Vec<_>>();
+    let mut appliances = job
+        .appliances
+        .iter()
+        .filter(|appliance| !appliance.removed)
+        .collect::<Vec<_>>();
     appliances.sort_by(|left, right| {
         compare_identifiers(&left.appliance_id, &right.appliance_id).then_with(|| {
             compare_identifiers(&left.source_record_number, &right.source_record_number)

@@ -1,6 +1,7 @@
 use eframe::egui::{self, Color32, Response, RichText, Sense, WidgetText};
 
 use crate::{
+    selection::{RangeSelection, apply_range_selection},
     session::{
         DetailState, JobSession, SortColumn, TableState, format_display_date, status_text,
         visible_indices,
@@ -19,6 +20,12 @@ struct TableWidths {
     location: f32,
     date: f32,
     status: f32,
+}
+
+#[derive(Clone, Copy)]
+struct TableRow {
+    number: usize,
+    index: usize,
 }
 
 impl TableWidths {
@@ -58,14 +65,14 @@ pub(crate) fn show(ui: &mut egui::Ui, session: &JobSession, table: &mut TableSta
             ui.spacing_mut().item_spacing.x = COLUMN_GAP;
             table_header(ui, table, widths);
             ui.separator();
-            for (row_number, index) in indices.into_iter().enumerate() {
+            for (number, &index) in indices.iter().enumerate() {
                 appliance_row(
                     ui,
                     session,
                     table,
+                    &indices,
                     widths,
-                    row_number,
-                    index,
+                    TableRow { number, index },
                     &mut open_detail,
                 );
             }
@@ -103,16 +110,17 @@ fn appliance_row(
     ui: &mut egui::Ui,
     session: &JobSession,
     table: &mut TableState,
+    visible_indices: &[usize],
     widths: TableWidths,
-    row_number: usize,
-    index: usize,
+    row: TableRow,
     open_detail: &mut Option<usize>,
 ) {
+    let TableRow { number, index } = row;
     let appliance = &session.job.appliances[index];
     let selected = table.selection.contains(&index);
     let fill = if selected {
         theme::TEAL_WASH
-    } else if row_number % 2 == 1 {
+    } else if number % 2 == 1 {
         ui.visuals().faint_bg_color
     } else {
         Color32::TRANSPARENT
@@ -157,14 +165,49 @@ fn appliance_row(
         })
         .inner;
     if checkbox_changed {
-        set_selected(table, index, checkbox_value);
+        let modifiers = ui.input(|input| input.modifiers);
+        if modifiers.shift {
+            let action = if !checkbox_value {
+                RangeSelection::Remove
+            } else if modifiers.command || modifiers.ctrl {
+                RangeSelection::Add
+            } else {
+                RangeSelection::Replace
+            };
+            table.selection_anchor = Some(apply_range_selection(
+                &mut table.selection,
+                visible_indices,
+                table.selection_anchor,
+                index,
+                action,
+            ));
+        } else {
+            set_selected(table, index, checkbox_value);
+            table.selection_anchor = Some(index);
+        }
     }
     if response.clicked() {
-        if ui.input(|input| input.modifiers.command || input.modifiers.ctrl) {
+        let modifiers = ui.input(|input| input.modifiers);
+        if modifiers.shift {
+            let action = if modifiers.command || modifiers.ctrl {
+                RangeSelection::Add
+            } else {
+                RangeSelection::Replace
+            };
+            table.selection_anchor = Some(apply_range_selection(
+                &mut table.selection,
+                visible_indices,
+                table.selection_anchor,
+                index,
+                action,
+            ));
+        } else if modifiers.command || modifiers.ctrl {
             set_selected(table, index, !table.selection.contains(&index));
+            table.selection_anchor = Some(index);
         } else {
             table.selection.clear();
             table.selection.insert(index);
+            table.selection_anchor = Some(index);
         }
     }
     if response.double_clicked() {

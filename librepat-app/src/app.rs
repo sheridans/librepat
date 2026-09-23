@@ -51,6 +51,7 @@ impl LibrePatApp {
         match action {
             ShellAction::Import => self.request(DeferredAction::Import, context),
             ShellAction::Open => self.request(DeferredAction::Open, context),
+            ShellAction::Quit => self.request(DeferredAction::Close, context),
             ShellAction::Save => self.save(),
         }
     }
@@ -81,7 +82,7 @@ impl LibrePatApp {
         self.open_job(&path);
     }
 
-    fn open_job(&mut self, path: &Path) {
+    pub(crate) fn open_job(&mut self, path: &Path) {
         match JobSession::open(path) {
             Ok(session) => {
                 self.session = Some(session);
@@ -190,6 +191,9 @@ impl eframe::App for LibrePatApp {
         }
 
         let busy = self.tasks.is_busy();
+        let drop_hovered = self.session.is_none()
+            && !busy
+            && context.input(|input| !input.raw.hovered_files.is_empty());
         let shell_action = shell::header(root, self.session.as_ref(), busy);
         shell::footer(root);
         let mut report_action = None;
@@ -203,7 +207,7 @@ impl eframe::App for LibrePatApp {
                 }
                 View::Reports => report_action = reports_view::show(ui, session, busy),
             });
-        } else if let Some(action) = shell::start(root, busy) {
+        } else if let Some(action) = shell::start(root, busy, drop_hovered) {
             self.handle_shell_action(action, &context);
         }
         if let Some(action) = shell_action {
@@ -215,6 +219,7 @@ impl eframe::App for LibrePatApp {
         if let Some(message) = view_message {
             self.show_error("Invalid edit", message);
         }
+        self.handle_start_page_drop(&context);
 
         crate::modals::unsaved(self, &context);
         crate::modals::replacement(self, &context);

@@ -56,9 +56,9 @@ fn insert_appliance(
             ordinal, source_record_number, appliance_id_original, appliance_id,
             description_original, description, location_original, location,
             test_date_original, test_date, test_time, retest_date_original, retest_date,
-            comments, mode_code, mode_label, user_name, overall_status
+            comments, mode_code, mode_label, user_name, overall_status, removed
          ) VALUES (
-            ?1, ?2, ?3, ?3, ?4, ?4, ?5, ?5, ?6, ?6, ?7, ?8, ?8, ?9, ?10, ?11, ?12, ?13
+            ?1, ?2, ?3, ?3, ?4, ?4, ?5, ?5, ?6, ?6, ?7, ?8, ?8, ?9, ?10, ?11, ?12, ?13, ?14
          )",
         params![
             to_i64(ordinal)?,
@@ -74,6 +74,7 @@ fn insert_appliance(
             appliance.mode.label,
             appliance.user,
             appliance_status_to_text(status),
+            appliance.removed,
         ],
     )?;
     let appliance_row_id = connection.last_insert_rowid();

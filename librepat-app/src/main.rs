@@ -2,13 +2,16 @@
 
 mod app;
 mod appliance_detail;
+mod appliance_removal;
 mod appliance_table;
 mod appliance_view;
+mod drop_flow;
 mod import_flow;
 mod importers;
 mod job_view;
 mod modals;
 mod reports_view;
+mod selection;
 mod session;
 mod shell;
 mod task;

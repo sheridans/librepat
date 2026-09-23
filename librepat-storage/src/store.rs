@@ -16,13 +16,13 @@ use crate::{
     insert::{insert_job, validate_job},
     metadata::write_metadata,
     read::load_job,
-    schema::{create_immutability_triggers, create_tables},
+    schema::{create_immutability_triggers, create_tables, migrate, validate_identity},
 };
 
 /// SQLite application ID encoding the ASCII bytes `LPAT`.
 pub const APPLICATION_ID: i64 = 0x4C50_4154;
 /// Current `.librepat` schema version.
-pub const SCHEMA_VERSION: i64 = 1;
+pub const SCHEMA_VERSION: i64 = 2;
 static NEXT_REPLACEMENT_FILE: AtomicU64 = AtomicU64::new(1);
 
 /// Open portable job and its transactional persistence API.
@@ -123,9 +123,10 @@ impl JobStore {
     /// Returns an error for an invalid identity, unsupported schema, corrupt source, or I/O failure.
     pub fn open(path: impl AsRef<Path>) -> Result<Self, StoreError> {
         let path = path.as_ref();
-        let connection = Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_WRITE)?;
-        validate_identity(&connection)?;
+        let mut connection = Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_WRITE)?;
+        let schema_version = validate_identity(&connection)?;
         configure(&connection)?;
+        migrate(&mut connection, schema_version)?;
         let store = Self {
             connection,
             path: path.to_owned(),
@@ -215,22 +216,6 @@ fn configure(connection: &Connection) -> Result<(), StoreError> {
     Ok(())
 }
 
-fn validate_identity(connection: &Connection) -> Result<(), StoreError> {
-    let application_id: i64 =
-        connection.query_row("PRAGMA application_id", [], |row| row.get(0))?;
-    if application_id != APPLICATION_ID {
-        return Err(StoreError::InvalidApplicationId);
-    }
-    let schema_version: i64 = connection.query_row("PRAGMA user_version", [], |row| row.get(0))?;
-    if schema_version > SCHEMA_VERSION {
-        return Err(StoreError::UnsupportedSchema(schema_version));
-    }
-    if schema_version != SCHEMA_VERSION {
-        return Err(StoreError::InvalidSchema(schema_version));
-    }
-    Ok(())
-}
-
 fn validate_source_hash(job: &Job) -> Result<(), StoreError> {
     let actual: [u8; 32] = Sha256::digest(&job.source.bytes).into();
     if actual != job.source.sha256 {
@@ -252,14 +237,15 @@ fn update_appliances(connection: &Connection, appliances: &[Appliance]) -> Resul
         let changed = connection.execute(
             "UPDATE appliance SET
                 appliance_id = ?1, description = ?2, location = ?3,
-                test_date = ?4, retest_date = ?5
-             WHERE id = ?6",
+                test_date = ?4, retest_date = ?5, removed = ?6
+             WHERE id = ?7",
             params![
                 appliance.appliance_id,
                 appliance.description,
                 appliance.location,
                 date_to_text(appliance.test_date),
                 date_to_text(appliance.retest_date),
+                appliance.removed,
                 row_id,
             ],
         )?;

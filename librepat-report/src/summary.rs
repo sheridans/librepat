@@ -13,11 +13,9 @@ pub struct JobSummary {
 
 #[must_use]
 pub fn summarize_job(job: &Job) -> JobSummary {
-    let mut summary = JobSummary {
-        appliances: job.appliances.len(),
-        ..JobSummary::default()
-    };
-    for appliance in &job.appliances {
+    let mut summary = JobSummary::default();
+    for appliance in job.appliances.iter().filter(|appliance| !appliance.removed) {
+        summary.appliances += 1;
         match appliance.status {
             ApplianceStatus::Pass => summary.passed += 1,
             ApplianceStatus::Fail => summary.failed += 1,

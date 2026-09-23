@@ -13,6 +13,7 @@ pub(crate) enum View {
 pub(crate) enum ShellAction {
     Import,
     Open,
+    Quit,
     Save,
 }
 
@@ -63,6 +64,10 @@ pub(crate) fn header(
                     }));
                 }
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    if ui.button("Quit").clicked() {
+                        action = Some(ShellAction::Quit);
+                    }
+                    ui.separator();
                     ui.add_enabled_ui(!busy, |ui| {
                         if session.is_some()
                             && ui
@@ -110,9 +115,17 @@ pub(crate) fn navigation(root: &mut egui::Ui, view: &mut View, session: &JobSess
                 .color(Color32::WHITE),
             );
             ui.label(
-                RichText::new(format!("{} appliances", session.job.appliances.len()))
-                    .size(11.0)
-                    .color(Color32::from_gray(185)),
+                RichText::new(format!(
+                    "{} appliances",
+                    session
+                        .job
+                        .appliances
+                        .iter()
+                        .filter(|appliance| !appliance.removed)
+                        .count()
+                ))
+                .size(11.0)
+                .color(Color32::from_gray(185)),
             );
             ui.add_space(24.0);
             nav_button(ui, view, View::Job, "01  JOB DETAILS");
@@ -168,7 +181,7 @@ fn copyright_years(current_year: i32) -> String {
     }
 }
 
-pub(crate) fn start(root: &mut egui::Ui, busy: bool) -> Option<ShellAction> {
+pub(crate) fn start(root: &mut egui::Ui, busy: bool, drop_hovered: bool) -> Option<ShellAction> {
     let mut action = None;
     egui::CentralPanel::default().show(root, |ui| {
         ui.vertical_centered(|ui| {
@@ -184,22 +197,47 @@ pub(crate) fn start(root: &mut egui::Ui, busy: bool) -> Option<ShellAction> {
                     .size(15.0)
                     .color(theme::MUTED),
             );
-            ui.add_space(36.0);
-            ui.add_enabled_ui(!busy, |ui| {
-                if ui
-                    .add_sized([220.0, 44.0], egui::Button::new("Import a tester export"))
-                    .clicked()
-                {
-                    action = Some(ShellAction::Import);
-                }
-                ui.add_space(10.0);
-                if ui
-                    .add_sized([220.0, 44.0], egui::Button::new("Open a .librepat job"))
-                    .clicked()
-                {
-                    action = Some(ShellAction::Open);
-                }
-            });
+            ui.add_space(28.0);
+            let drop_text = if drop_hovered {
+                "Drop to open or import"
+            } else {
+                "Drop a .librepat job or tester export here"
+            };
+            egui::Frame::new()
+                .fill(if drop_hovered {
+                    theme::TEAL_WASH
+                } else {
+                    Color32::TRANSPARENT
+                })
+                .stroke(egui::Stroke::new(
+                    if drop_hovered { 2.0 } else { 1.0 },
+                    if drop_hovered {
+                        theme::TEAL
+                    } else {
+                        Color32::from_gray(180)
+                    },
+                ))
+                .corner_radius(6.0)
+                .inner_margin(egui::Margin::symmetric(30, 20))
+                .show(ui, |ui| {
+                    ui.add_enabled_ui(!busy, |ui| {
+                        if ui
+                            .add_sized([220.0, 44.0], egui::Button::new("Import a tester export"))
+                            .clicked()
+                        {
+                            action = Some(ShellAction::Import);
+                        }
+                        ui.add_space(10.0);
+                        if ui
+                            .add_sized([220.0, 44.0], egui::Button::new("Open a .librepat job"))
+                            .clicked()
+                        {
+                            action = Some(ShellAction::Open);
+                        }
+                    });
+                    ui.add_space(12.0);
+                    ui.label(RichText::new(drop_text).size(12.0).color(theme::TEAL));
+                });
             ui.add_space(50.0);
             ui.label(
                 RichText::new("ONE JOB · ONE FILE · ORIGINAL SOURCE EMBEDDED")

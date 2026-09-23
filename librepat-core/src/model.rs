@@ -178,6 +178,8 @@ impl ApplianceStatus {
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Appliance {
     pub source_record_number: String,
+    /// Excludes this appliance from the active job and reports without deleting imported evidence.
+    pub removed: bool,
     pub appliance_id: String,
     pub description: String,
     pub description_segments: Vec<String>,

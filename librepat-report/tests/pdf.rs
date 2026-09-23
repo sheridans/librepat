@@ -2,7 +2,7 @@ use librepat_core::{
     Appliance, ApplianceStatus, Comparison, ImportProvenance, Job, JobMetadata, Limit, Measurement,
     SourceArchive, TestKind, TestMode, TestResult, TestStatus,
 };
-use librepat_report::generate_appliance_report;
+use librepat_report::{generate_appliance_report, summarize_job};
 use lopdf::Document;
 use time::{OffsetDateTime, macros::date};
 
@@ -21,6 +21,7 @@ pub(crate) fn sample_job() -> Job {
     metadata.site_address.town = "Example town".into();
     let appliance = Appliance {
         source_record_number: "1".into(),
+        removed: false,
         appliance_id: "A-001".into(),
         description: "Synthetic control panel".into(),
         description_segments: vec!["Synthetic control panel".into()],
@@ -210,5 +211,33 @@ fn appliance_report_should_use_the_final_repeated_test() {
     assert!(
         text.contains("0.04") && !text.contains("9.99"),
         "report did not select the final result: {text}"
+    );
+}
+
+#[test]
+fn appliance_report_should_omit_removed_appliances() {
+    let mut job = sample_job();
+    job.appliances[0].removed = true;
+
+    let bytes = generate_appliance_report(&job)
+        .unwrap_or_else(|error| panic!("could not generate appliance report: {error}"));
+    let (_, text) = parsed_text(&bytes);
+
+    assert!(
+        text.contains("24 appliances") && !text.contains("A-001"),
+        "removed appliance appeared in report: {text}"
+    );
+}
+
+#[test]
+fn job_summary_should_omit_removed_appliances() {
+    let mut job = sample_job();
+    job.appliances[0].removed = true;
+
+    let summary = summarize_job(&job);
+
+    assert_eq!(
+        (summary.appliances, summary.passed, summary.failed),
+        (24, 24, 0)
     );
 }

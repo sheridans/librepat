@@ -200,6 +200,7 @@ impl RecordBuilder {
         Some((
             Appliance {
                 source_record_number: self.number,
+                removed: false,
                 appliance_id: self.appliance_id.trim().to_owned(),
                 description: description.joined,
                 description_segments: description.segments,
