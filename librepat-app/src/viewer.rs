@@ -9,14 +9,14 @@ use std::{
 pub(crate) fn open(path: &Path) -> io::Result<()> {
     #[cfg(target_os = "windows")]
     return launch("cmd", &["/C", "start", ""], path);
-    #[cfg(target_os = "linux")]
-    return open_linux(path);
-    #[cfg(not(any(target_os = "windows", target_os = "linux")))]
+    #[cfg(target_os = "macos")]
     return launch("open", &[], path);
+    #[cfg(not(any(target_os = "windows", target_os = "macos")))]
+    return open_unix(path);
 }
 
-#[cfg(target_os = "linux")]
-fn open_linux(path: &Path) -> io::Result<()> {
+#[cfg(not(any(target_os = "windows", target_os = "macos")))]
+fn open_unix(path: &Path) -> io::Result<()> {
     let launchers: [(&str, &[&str]); 6] = [
         ("gio", &["open"]),
         ("okular", &[]),
